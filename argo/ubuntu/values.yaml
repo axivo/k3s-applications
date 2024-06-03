@@ -1,0 +1,18 @@
+nameOverride: ""
+fullnameOverride: ""
+
+affinity: {}
+image:
+  repository: ubuntu
+  pullPolicy: IfNotPresent
+  tag: ""
+nodeSelector: {}
+podAnnotations: {}
+podCommand: ["/bin/sleep", "365d"]
+podLabels: {}
+replicaCount: 1
+resources: {}
+service:
+  type: ClusterIP
+  port: 80
+tolerations: []

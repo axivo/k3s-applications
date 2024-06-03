@@ -1,0 +1,15 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "assignees": [
+    "fmunteanu"
+  ],
+  "extends": [
+    "config:recommended",
+    "docker:enableMajor"
+  ],
+  "labels": [
+    "dependency"
+  ],
+  "prConcurrentLimit": 0,
+  "prHourlyLimit": 0
+}
