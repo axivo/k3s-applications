@@ -6,7 +6,7 @@ Ubuntu Server troubleshooting pod for ArgoCD.
 
 Example of ArgoCD application manifest, with pod created into `default` namespace:
 
-```
+```yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -33,6 +33,6 @@ spec:
 
 Example of pod shell login:
 
-```
+```shell
 kubectl exec -itn default ubuntu-6589cf5fb4-w5gjx -- bash
 ```
