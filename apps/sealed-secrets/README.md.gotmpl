@@ -1,12 +1,9 @@
-{{- define "application.version" -}}
-{{- (index .Dependencies 0).Version -}}
-{{- end -}}
 {{- define "chart.appVersionBadge" -}}
-{{- $version := include "application.version" . -}}
+{{- $version := (index .Dependencies 0).Version -}}
 ![AppVersion: {{ $version }}](https://img.shields.io/badge/AppVersion-{{ $version | replace "-" "--" }}-informational?style=flat-square)
 {{- end -}}
 {{- define "chart.url" -}}
-{{- $version := include "application.version" . -}}
+{{- $version := (index .Dependencies 0).Version -}}
 {{- printf "%s/tree/%s/%s/bitnami/%s" .Home .Name $version .Name -}}
 {{- end -}}
 # {{ template "chart.name" . }}
