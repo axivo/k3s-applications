@@ -1,6 +1,6 @@
 # ubuntu
 
-![AppVersion: 22.04](https://img.shields.io/badge/AppVersion-22.04-informational?style=flat-square)
+![AppVersion: 24.04](https://img.shields.io/badge/AppVersion-24.04-informational?style=flat-square)
 
 ArgoCD application for Ubuntu Server-based troubleshooting pod, deployed into AXIVO [K3s cluster](https://github.com/axivo/k3s-cluster). Review the cluster [documentation](https://axivo.com/k3s-cluster/), for additional details. The application deployment is also compatible with a generic Kubernetes cluster.
 
