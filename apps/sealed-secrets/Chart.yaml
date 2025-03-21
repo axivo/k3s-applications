@@ -1,0 +1,9 @@
+apiVersion: v2
+name: sealed-secrets
+description: Kubernetes secrets controller used for secure Git storage
+home: https://github.com/bitnami/charts
+version: 1.0.0
+dependencies:
+  - name: sealed-secrets
+    repository: oci://registry-1.docker.io/bitnamicharts
+    version: 2.5.6
