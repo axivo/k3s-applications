@@ -1,0 +1,31 @@
+sealed-secrets:
+  ingress:
+    # -- See [`bitnami-labs/sealed-secrets#1427`](https://github.com/bitnami-labs/sealed-secrets/issues/1427), for details
+    enabled: false
+    annotations:
+      cert-manager.io/cluster-issuer: cloudflare-cluster-issuer
+    hostname: secrets.noty.cc
+    ingressClassName: cilium
+    pathType: Prefix
+    tls: true
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      namespace: kube-system
+      interval: 30s
+      scrapeTimeout: 25s
+  pdb:
+    create: true
+    maxUnavailable: 1
+  resources:
+    limits:
+      memory: 128Mi
+    requests:
+      cpu: 10m
+      memory: 128Mi
+  serviceMonitor:
+    enabled: true
+    namespace: kube-system
+    interval: 30s
+    scrapeTimeout: 25s
