@@ -1,0 +1,119 @@
+name: Update Documentation
+
+on:
+  pull_request:
+    paths:
+      - 'apps/*/Chart.yaml'
+      - 'apps/*/values.yaml'
+      - 'apps/*/README.md.gotmpl'
+
+concurrency:
+  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+defaults:
+  run:
+    shell: bash
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install package
+        env:
+          HELM_DOCS_URL: https://github.com/norwoodj/helm-docs/releases/download
+          HELM_DOCS_VERSION: 1.14.2
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const os = require('os');
+            const tmpDir = os.tmpdir();
+            const helmDocsPath = [tmpDir,
+              'helm-docs_' + process.env.HELM_DOCS_VERSION + '_Linux_x86_64.deb'
+            ].join('/');
+            const helmDocsUrl = [process.env.HELM_DOCS_URL, 'v' + process.env.HELM_DOCS_VERSION,
+              'helm-docs_' + process.env.HELM_DOCS_VERSION + '_Linux_x86_64.deb'
+            ].join('/');
+            const runSudo = async (args) => (await exec.exec('sudo', args));
+            try {
+              await runSudo(['wget', '-qP', tmpDir, helmDocsUrl]);
+              await runSudo(['apt-get', '-y', 'install', helmDocsPath]);
+            } catch (error) {
+              core.setFailed(error.message);
+            }
+
+      - name: Update documentation
+        id: update
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const runGit = async (args) => (await exec.getExecOutput('git', args)).stdout.trim();
+            const excludeList = async () =>
+              (await runGit(['ls-files', '-d', '--deduplicate', '--exclude-standard'])).trim().split('\n');
+            const processFiles = async (flag, label, exclusions) => {
+              const files = (await runGit(['ls-files', '-' + flag, '--deduplicate', '--exclude-standard']))
+                .split('\n')
+                .filter(file => file && (flag === 'om' && !exclusions.includes(file)));
+              core.setOutput(label, files.join(','));
+              return files.length;
+            };
+            try {
+              await Promise.all([
+                runGit(['config', 'user.name', 'github-actions[bot]']),
+                runGit(['config', 'user.email', '41898282+github-actions[bot]@users.noreply.github.com'])
+              ]);
+              await runGit(['fetch']);
+              await runGit(['switch', process.env.GITHUB_HEAD_REF]);
+              await exec.exec('helm-docs');
+              const exclusions = await excludeList();
+              const [additions, deletions] = await Promise.all([
+                processFiles('om', 'additions', exclusions),
+                processFiles('d', 'deletions', exclusions)
+              ]);
+            } catch (error) {
+              core.setFailed(error.message);
+            }
+
+      - name: Create commit
+        if: steps.update.outputs.additions || steps.update.outputs.deletions
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs/promises');
+            const parseFiles = async (files, type) =>
+              Promise.all(files.split(',').filter(Boolean).map(async file => (type === 'add')
+                ? { path: file, contents: Buffer.from(await fs.readFile(file, 'utf-8')).toString('base64') }
+                : { path: file }
+              ));
+            const input = {
+              branch: {
+                repositoryNameWithOwner: context.payload.repository.full_name,
+                branchName: context.payload.pull_request.head.ref
+              },
+              expectedHeadOid: context.payload.pull_request.head.sha,
+              fileChanges: {
+                additions: await parseFiles('${{ steps.update.outputs.additions }}', 'add'),
+                deletions: await parseFiles('${{ steps.update.outputs.deletions }}', 'delete')
+              },
+              message: { headline: 'docs(github-action): update documentation' }
+            };
+            const mutation = `
+              mutation CreateCommitOnBranch($input: CreateCommitOnBranchInput!) {
+                createCommitOnBranch(input: $input) { commit { oid } }
+              }
+            `;
+            try {
+              const { createCommitOnBranch } = await github.graphql(mutation, { input });
+              console.log('Commit created with OID:', createCommitOnBranch.commit.oid);
+            } catch (error) {
+              core.setFailed(error.message);
+            }
