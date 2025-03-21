@@ -3,4 +3,4 @@ name: ubuntu
 description: Ubuntu Server-based troubleshooting pod for Kubernetes
 home: https://ubuntu.com/server
 version: 1.0.0
-appVersion: "22.04"
+appVersion: "24.04"
