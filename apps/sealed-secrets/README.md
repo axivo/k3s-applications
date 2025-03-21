@@ -1,8 +1,8 @@
 # sealed-secrets
 
-![AppVersion: 2.5.6](https://img.shields.io/badge/AppVersion-2.5.6-informational?style=flat-square)
+![AppVersion: 2.5.7](https://img.shields.io/badge/AppVersion-2.5.7-informational?style=flat-square)
 
-ArgoCD application for `sealed-secrets` [chart](https://github.com/bitnami/charts/tree/sealed-secrets/2.5.6/bitnami/sealed-secrets), deployed into AXIVO [K3s cluster](https://github.com/axivo/k3s-cluster). Review the cluster [documentation](https://axivo.com/k3s-cluster/), for additional details. The application deployment is also compatible with a generic Kubernetes cluster.
+ArgoCD application for `sealed-secrets` [chart](https://github.com/bitnami/charts/tree/sealed-secrets/2.5.7/bitnami/sealed-secrets), deployed into AXIVO [K3s cluster](https://github.com/axivo/k3s-cluster). Review the cluster [documentation](https://axivo.com/k3s-cluster/), for additional details. The application deployment is also compatible with a generic Kubernetes cluster.
 
 ## Application Deployment
 
