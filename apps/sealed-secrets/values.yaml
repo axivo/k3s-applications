@@ -1,31 +1,63 @@
 sealed-secrets:
-  ingress:
-    # -- See [`bitnami-labs/sealed-secrets#1427`](https://github.com/bitnami-labs/sealed-secrets/issues/1427), for details
-    enabled: false
-    annotations:
-      cert-manager.io/cluster-issuer: cloudflare-cluster-issuer
-    hostname: secrets.noty.cc
-    ingressClassName: cilium
-    pathType: Prefix
-    tls: true
+  # -- (string) Fully overrides the controller fullname
+  # @default -- ""
+  fullnameOverride: sealed-secrets-controller
+  # -- (string) Specifies key renewal period, default `720h0m`
+  # @default -- ""
+  keyrenewperiod: ""
   metrics:
-    enabled: true
-    serviceMonitor:
-      enabled: true
+    dashboards:
+      # -- (bool) Specifies whether a Grafana dashboard ConfigMap is created
+      # @default -- false
+      create: true
+      # -- (object) Labels added to Grafana dashboard ConfigMap
+      # @default -- {}
+      labels: {}
+      # -- (object) Annotations added to Grafana dashboard ConfigMap
+      # @default -- {}
+      annotations: {}
+      # -- (string) Namespace where Grafana dashboard ConfigMap is deployed
+      # @default -- ""
       namespace: kube-system
+    serviceMonitor:
+      # -- (bool) Specifies if a ServiceMonitor is deployed for Prometheus Operator
+      # @default -- false
+      enabled: true
+      # -- (string) Namespace where Prometheus Operator is running
+      # @default -- ""
+      namespace: kube-system
+      # -- (string) How frequently to scrape metrics
+      # @default -- ""
       interval: 30s
-      scrapeTimeout: 25s
+      # -- (string) Timeout after which scrape is ended
+      # @default -- ""
+      scrapeTimeout: 15s
+      # -- (bool) Specifies if ServiceMonitor endpoints honor labels
+      # @default -- true
+      honorLabels: true
+      # -- (list) Specifies general relabeling of metrics
+      # @default -- []
+      relabelings: []
+      # -- (list) Specifies additional relabeling of metrics
+      # @default -- []
+      metricRelabelings: []
   pdb:
+    # -- (bool) Specifies whether a PodDisruptionBudget is created
+    # @default -- false
     create: true
+    # -- (int) Minimum number of available pods
+    # @default -- 1
+    minAvailable: ""
+    # -- (int) Maximum number of unavailable pods
+    # @default -- ""
     maxUnavailable: 1
   resources:
+    # -- (object) Resources limits for containers
+    # @default -- {}
     limits:
       memory: 128Mi
+    # -- (object) Resources requests for containers
+    # @default -- {}
     requests:
       cpu: 10m
       memory: 128Mi
-  serviceMonitor:
-    enabled: true
-    namespace: kube-system
-    interval: 30s
-    scrapeTimeout: 25s

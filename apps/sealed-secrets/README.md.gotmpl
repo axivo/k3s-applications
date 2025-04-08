@@ -3,14 +3,15 @@
 ![AppVersion: {{ $version }}](https://img.shields.io/badge/AppVersion-{{ $version | replace "-" "--" }}-informational?style=flat-square)
 {{- end -}}
 {{- define "chart.url" -}}
+{{- $source := (index .Sources 0) -}}
 {{- $version := (index .Dependencies 0).Version -}}
-{{- printf "%s/tree/%s/%s/bitnami/%s" .Home .Name $version .Name -}}
+{{- printf "%s/blob/helm-v%s/helm/%s" $source $version .Name -}}
 {{- end -}}
 # {{ template "chart.name" . }}
 
-{{ template "chart.appVersionBadge" . }}
+{{ template "chart.typeBadge" . }} {{ template "chart.versionBadge" . }} {{ template "chart.appVersionBadge" . }}
 
-ArgoCD application for `{{ template "chart.name" . }}` [chart]({{ template "chart.url" . }}), deployed into AXIVO [K3s cluster](https://github.com/axivo/k3s-cluster). Review the cluster [documentation](https://axivo.com/k3s-cluster/), for additional details. The application deployment is also compatible with a generic Kubernetes cluster.
+ArgoCD application for `{{ template "chart.name" . }}` [chart]({{ template "chart.url" . }}), deployed into AXIVO [K3s Cluster](https://github.com/axivo/k3s-cluster). Review the cluster [documentation](https://axivo.com/k3s-cluster/), for additional details. The application deployment is also compatible with a generic Kubernetes cluster.
 
 ## Application Deployment
 
@@ -61,7 +62,7 @@ EOF
 Encrypt the secret with the CLI tool:
 
 ```shell
-kubeseal --controller-name=sealed-secrets -o yaml -f secret.yaml -w sealed-secret.yaml
+kubeseal -o yaml -f secret.yaml -w sealed-secret.yaml
 ```
 
 ### Sealed Secret
