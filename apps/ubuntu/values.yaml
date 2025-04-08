@@ -1,23 +1,104 @@
+# -- (int) Number of replicas
+# @default -- 1
 replicaCount: 1
+
 image:
+  # -- (string) Image repository
+  # @default -- "ubuntu"
   repository: ubuntu
+  # -- (string) Image tag, defaults to Chart.AppVersion if not set
+  # @default -- ""
   tag: ""
+  # -- (string) Image pull policy
+  # @default -- IfNotPresent
   pullPolicy: IfNotPresent
+
+# -- (list) Image pull secrets
+# @default -- []
 imagePullSecrets: []
+# -- (string) Override the chart name
+# @default -- ""
 nameOverride: ""
+# -- (string) Override the full name of the chart
+# @default -- ""
 fullnameOverride: ""
+
+serviceAccount:
+  # -- (bool) Specifies whether a service account should be created
+  # @default -- false
+  create: false
+  # -- (string) The name of the service account to use
+  # @default -- ""
+  name: ""
+  # -- (map) Annotations to add to the service account
+  # @default -- {}
+  annotations: {}
+
+# -- (map) Annotations to add to the pod
+# @default -- {}
 podAnnotations: {}
+# -- (map) Labels to add to the pod
+# @default -- {}
 podLabels: {}
+# -- (map) Pod security context
+# @default -- {}
 podSecurityContext: {}
+# -- (map) Container security context
+# @default -- {}
 securityContext: {}
+
+livenessProbe:
+  # -- (bool) Enable liveness probe
+  # @default -- false
+  enabled: false
+  # -- (list) Command to execute for liveness check
+  # @default -- ["pidof", "sleep"]
+  command:
+    - pidof
+    - sleep
+  # -- (int) Delay before liveness probe is initiated
+  # @default -- 30
+  initialDelaySeconds: 30
+  # -- (int) How often to perform the probe
+  # @default -- 10
+  periodSeconds: 10
+  # -- (int) When the probe times out
+  # @default -- 5
+  timeoutSeconds: 5
+  # -- (int) Minimum consecutive successes for the probe to be considered successful after having failed
+  # @default -- 1
+  successThreshold: 1
+  # -- (int) Minimum consecutive failures for the probe to be considered failed after having succeeded
+  # @default -- 3
+  failureThreshold: 3
+
 resources:
+  # -- (map) Resource limits for the container
   limits:
+    # -- (string) Memory limit
+    # @default -- "128Mi"
     memory: 128Mi
+  # -- (map) Resource requests for the container
   requests:
+    # -- (string) CPU request
+    # @default -- "10m"
     cpu: 10m
+    # -- (string) Memory request
+    # @default -- "128Mi"
     memory: 128Mi
+
+# -- (list) Additional volumes for the pod
+# @default -- []
 volumes: []
+# -- (list) Additional volume mounts for the container
+# @default -- []
 volumeMounts: []
+# -- (map) Node selector for pod assignment
+# @default -- {}
 nodeSelector: {}
+# -- (list) Tolerations for pod assignment
+# @default -- []
 tolerations: []
+# -- (map) Affinity rules for pod assignment
+# @default -- {}
 affinity: {}

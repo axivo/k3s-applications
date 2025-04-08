@@ -1,8 +1,8 @@
 # {{ template "chart.name" . }}
 
-{{ template "chart.appVersionBadge" . }}
+{{ template "chart.typeBadge" . }} {{ template "chart.versionBadge" . }} {{ template "chart.appVersionBadge" . }}
 
-ArgoCD application for Ubuntu Server-based troubleshooting pod, deployed into AXIVO [K3s cluster](https://github.com/axivo/k3s-cluster). Review the cluster [documentation](https://axivo.com/k3s-cluster/), for additional details. The application deployment is also compatible with a generic Kubernetes cluster.
+ArgoCD application for a minimal Ubuntu `{{ template "chart.appVersion" . }}` LTS container, deployed into AXIVO [K3s Cluster](https://github.com/axivo/k3s-cluster). Review the cluster [documentation](https://axivo.com/k3s-cluster/), for additional details. The application deployment is also compatible with a generic Kubernetes cluster.
 
 ## Application Deployment
 
@@ -12,7 +12,7 @@ ArgoCD application for Ubuntu Server-based troubleshooting pod, deployed into AX
 The application can be deployed from ArgoCD UI, or terminal:
 
 ```shell
-kubectl apply -f apps/{{ template "chart.name" . }}/application.yaml
+$ kubectl apply -f apps/{{ template "chart.name" . }}/application.yaml
 ```
 
 ### Chart Values
@@ -23,3 +23,18 @@ See the chart values, listed below.
 > Use [Robusta KRR](https://axivo.com/k3s-cluster/tutorials/handbook/tools/#robusta-krr), to optimize the cluster resources allocation.
 
 {{ template "chart.valuesTable" . }}
+
+## Shell Login
+
+Example of container shell login:
+
+```shell
+$ kubectl get pods -n default -o go-template \
+  --template='{{`{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}`}}'
+ubuntu-6589cf5fb4-p9z2b
+
+$ kubectl exec -itn default ubuntu-6589cf5fb4-p9z2b -- /bin/bash
+root@ubuntu-6589cf5fb4-p9z2b:/#
+```
+
+End-user will have `root` access to a minimal Ubuntu `{{ template "chart.appVersion" . }}` LTS container, connected to the Kubernetes cluster network. Common tools may require manual installation via `apt-get`.
