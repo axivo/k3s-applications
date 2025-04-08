@@ -21,7 +21,7 @@ ArgoCD application for `{{ template "chart.name" . }}` [chart]({{ template "char
 The application can be deployed from ArgoCD UI, or terminal:
 
 ```shell
-kubectl apply -f apps/{{ template "chart.name" . }}/application.yaml
+$ kubectl apply -f apps/{{ template "chart.name" . }}/application.yaml
 ```
 
 ### Chart Values
@@ -38,7 +38,7 @@ See the chart values, listed below.
 To encrypt sensitive information prior storing it into a Git repository, install the CLI tool:
 
 ```shell
-brew install kubeseal
+$ brew install kubeseal
 ```
 
 ### Usage
@@ -46,7 +46,7 @@ brew install kubeseal
 Create a `Secret` resource, locally:
 
 ```shell
-cat > secret.yaml <<EOF
+$ cat > secret.yaml <<EOF
 apiVersion: v1
 kind: Secret
 metadata:
@@ -62,7 +62,7 @@ EOF
 Encrypt the secret with the CLI tool:
 
 ```shell
-kubeseal -o yaml -f secret.yaml -w sealed-secret.yaml
+$ kubeseal -o yaml -f secret.yaml -w sealed-secret.yaml
 ```
 
 ### Sealed Secret

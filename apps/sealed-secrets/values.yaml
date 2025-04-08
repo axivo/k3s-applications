@@ -1,63 +1,71 @@
 sealed-secrets:
   # -- (string) Fully overrides the controller fullname
-  # @default -- ""
+  # @default -- "sealed-secrets-controller"
   fullnameOverride: sealed-secrets-controller
-  # -- (string) Specifies key renewal period, default `720h0m`
+  # -- (string) Specifies key renewal period, e.g., 720h0m (30 days)
   # @default -- ""
   keyrenewperiod: ""
+
   metrics:
     dashboards:
       # -- (bool) Specifies whether a Grafana dashboard ConfigMap is created
-      # @default -- false
+      # @default -- true
       create: true
-      # -- (object) Labels added to Grafana dashboard ConfigMap
+      # -- (map) Labels added to Grafana dashboard ConfigMap
       # @default -- {}
       labels: {}
-      # -- (object) Annotations added to Grafana dashboard ConfigMap
+      # -- (map) Annotations added to Grafana dashboard ConfigMap
       # @default -- {}
       annotations: {}
       # -- (string) Namespace where Grafana dashboard ConfigMap is deployed
-      # @default -- ""
+      # @default -- "kube-system"
       namespace: kube-system
+
     serviceMonitor:
-      # -- (bool) Specifies if a ServiceMonitor is deployed for Prometheus Operator
-      # @default -- false
+      # -- (bool) Specifies if a ServiceMonitor is deployed
+      # @default -- true
       enabled: true
       # -- (string) Namespace where Prometheus Operator is running
-      # @default -- ""
+      # @default -- "kube-system"
       namespace: kube-system
       # -- (string) How frequently to scrape metrics
-      # @default -- ""
+      # @default -- "30s"
       interval: 30s
       # -- (string) Timeout after which scrape is ended
-      # @default -- ""
+      # @default -- "15s"
       scrapeTimeout: 15s
       # -- (bool) Specifies if ServiceMonitor endpoints honor labels
       # @default -- true
       honorLabels: true
-      # -- (list) Specifies general relabeling of metrics
+      # -- (list) Specifies general relabeling rules for metrics
       # @default -- []
       relabelings: []
-      # -- (list) Specifies additional relabeling of metrics
+      # -- (list) Specifies additional relabeling rules for metrics
       # @default -- []
       metricRelabelings: []
+
   pdb:
     # -- (bool) Specifies whether a PodDisruptionBudget is created
-    # @default -- false
+    # @default -- true
     create: true
-    # -- (int) Minimum number of available pods
-    # @default -- 1
-    minAvailable: ""
-    # -- (int) Maximum number of unavailable pods
+    # -- (int/string) Minimum number of available pods, mutually exclusive with maxUnavailable
     # @default -- ""
+    minAvailable: ""
+    # -- (int/string) Maximum number of unavailable pods, mutually exclusive with minAvailable
+    # @default -- 1
     maxUnavailable: 1
+
   resources:
-    # -- (object) Resources limits for containers
-    # @default -- {}
+    # -- (map) Resource limits for the container
     limits:
+      # -- (string) Memory limit
+      # @default -- "128Mi"
       memory: 128Mi
-    # -- (object) Resources requests for containers
-    # @default -- {}
+    # -- (map) Resource requests for the container
     requests:
+      # -- (string) CPU request
+      # @default -- "10m"
       cpu: 10m
+      # -- (string) Memory request
+      # @default -- "128Mi"
       memory: 128Mi
