@@ -76,7 +76,7 @@ If you'd like to contribute code or documentation changes, please follow this wo
 
 ### Dependency Management
 
-This project uses [Renovate Bot](https://github.com/renovatebot) (configured via `.github/renovate.json5`) to manage dependency updates automatically. Please avoid including unrelated dependency version bumps in your Pull Requests unless the update is directly related to the feature or fix you are contributing.
+This project uses [Renovate Bot](https://github.com/renovatebot), to automate dependency updates. Please avoid including unrelated dependency version bumps in your Pull Requests unless the update is directly related to the feature or fix you are contributing.
 
 ## License
 
