@@ -1,0 +1,25 @@
+This chart deploys a simple Ubuntu pod useful for troubleshooting within your Kubernetes cluster.
+
+1. List the pods in the namespace to find the Ubuntu pod name:
+   $ kubectl get pods -n {{ .Release.Namespace }} -o go-template \
+       --template='{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}'
+   # Identify the pod name starting with '{{ include "ubuntu.fullname" . }}', from the list above.
+
+2. Access the pod's shell (replace <POD_NAME> with the actual name):
+   $ kubectl exec -itn {{ .Release.Namespace }} <POD_NAME> -- /bin/bash
+
+Optional Features
+
+*  **Service Account:**
+   {{- if .Values.serviceAccount.create }}
+   A dedicated ServiceAccount named '{{ include "ubuntu.serviceAccountName" . }}' has been created for this pod. You may need to create Roles and RoleBindings to grant it specific permissions if you intend to use `kubectl` or other tools that interact with the Kubernetes API from within the pod.
+   {{- else }}
+   This pod is using the '{{ include "ubuntu.serviceAccountName" . }}' ServiceAccount. You can enable the creation of a dedicated ServiceAccount by setting `serviceAccount.create=true` in your values.
+   {{- end }}
+
+*  **Liveness Probe:**
+   {{- if .Values.livenessProbe.enabled }}
+   A liveness probe is enabled for this pod, checking if the 'sleep' process is running. Kubernetes will restart the container if the probe fails repeatedly.
+   {{- else }}
+   A liveness probe is currently disabled. You can enable it by setting `livenessProbe.enabled=true` in your values.
+   {{- end }}

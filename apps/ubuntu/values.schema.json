@@ -1,0 +1,217 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "UbuntuValues",
+  "description": "Values schema for the Ubuntu troubleshooting chart.",
+  "type": "object",
+  "properties": {
+    "replicaCount": {
+      "description": "(int) Number of replicas",
+      "type": "integer",
+      "default": 1
+    },
+    "image": {
+      "description": "(map) Image configuration",
+      "type": "object",
+      "properties": {
+        "repository": {
+          "description": "(string) Image repository",
+          "type": "string",
+          "default": "ubuntu"
+        },
+        "tag": {
+          "description": "(string) Image tag, defaults to Chart.AppVersion if not set",
+          "type": "string",
+          "default": ""
+        },
+        "pullPolicy": {
+          "description": "(string) Image pull policy",
+          "type": "string",
+          "enum": ["Always", "IfNotPresent", "Never"],
+          "default": "IfNotPresent"
+        }
+      },
+      "additionalProperties": false
+    },
+    "imagePullSecrets": {
+      "description": "(list) Image pull secrets",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": ["name"]
+      },
+      "default": []
+    },
+    "nameOverride": {
+      "description": "(string) Override the chart name",
+      "type": "string",
+      "default": ""
+    },
+    "fullnameOverride": {
+      "description": "(string) Override the full name of the chart",
+      "type": "string",
+      "default": ""
+    },
+    "serviceAccount": {
+      "description": "(map) ServiceAccount configuration",
+      "type": "object",
+      "properties": {
+        "create": {
+          "description": "(bool) Specifies whether a service account should be created",
+          "type": "boolean",
+          "default": false
+        },
+        "name": {
+          "description": "(string) The name of the service account to use",
+          "type": "string",
+          "default": ""
+        },
+        "annotations": {
+          "description": "(map) Annotations to add to the service account",
+          "type": "object",
+          "default": {},
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "podAnnotations": {
+      "description": "(map) Annotations to add to the pod",
+      "type": "object",
+      "default": {},
+      "additionalProperties": true
+    },
+    "podLabels": {
+      "description": "(map) Labels to add to the pod",
+      "type": "object",
+      "default": {},
+      "additionalProperties": true
+    },
+    "podSecurityContext": {
+      "description": "(map) Pod security context",
+      "type": "object",
+      "default": {},
+      "additionalProperties": true
+    },
+    "securityContext": {
+      "description": "(map) Container security context",
+      "type": "object",
+      "default": {},
+      "additionalProperties": true
+    },
+    "livenessProbe": {
+      "description": "(map) Liveness probe configuration",
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "description": "(bool) Enable liveness probe",
+          "type": "boolean",
+          "default": false
+        },
+        "command": {
+          "description": "(list) Command to execute for liveness check",
+          "type": "array",
+          "items": { "type": "string" },
+          "default": ["pidof", "sleep"]
+        },
+        "initialDelaySeconds": {
+          "description": "(int) Delay before liveness probe is initiated",
+          "type": "integer",
+          "default": 30
+        },
+        "periodSeconds": {
+          "description": "(int) How often to perform the probe",
+          "type": "integer",
+          "default": 10
+        },
+        "timeoutSeconds": {
+          "description": "(int) When the probe times out",
+          "type": "integer",
+          "default": 5
+        },
+        "successThreshold": {
+          "description": "(int) Minimum consecutive successes for the probe to be considered successful after having failed",
+          "type": "integer",
+          "default": 1
+        },
+        "failureThreshold": {
+          "description": "(int) Minimum consecutive failures for the probe to be considered failed after having succeeded",
+          "type": "integer",
+          "default": 3
+        }
+      },
+      "additionalProperties": false
+    },
+    "resources": {
+      "description": "(map) Resource limits and requests for the container",
+      "type": "object",
+      "properties": {
+        "limits": {
+          "description": "(map) Resource limits for the container",
+          "type": "object",
+          "properties": {
+            "memory": {
+              "description": "(string) Memory limit",
+              "type": "string",
+              "default": "128Mi"
+            }
+          },
+          "additionalProperties": true
+        },
+        "requests": {
+          "description": "(map) Resource requests for the container",
+          "type": "object",
+          "properties": {
+            "cpu": {
+              "description": "(string) CPU request",
+              "type": "string",
+              "default": "10m"
+            },
+            "memory": {
+              "description": "(string) Memory request",
+              "type": "string",
+              "default": "128Mi"
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "volumes": {
+      "description": "(list) Additional volumes for the pod",
+      "type": "array",
+      "items": { "type": "object" },
+      "default": []
+    },
+    "volumeMounts": {
+      "description": "(list) Additional volume mounts for the container",
+      "type": "array",
+      "items": { "type": "object" },
+      "default": []
+    },
+    "nodeSelector": {
+      "description": "(map) Node selector for pod assignment",
+      "type": "object",
+      "default": {},
+      "additionalProperties": true
+    },
+    "tolerations": {
+      "description": "(list) Tolerations for pod assignment",
+      "type": "array",
+      "items": { "type": "object" },
+      "default": []
+    },
+    "affinity": {
+      "description": "(map) Affinity rules for pod assignment",
+      "type": "object",
+      "default": {},
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}
