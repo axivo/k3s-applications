@@ -4,14 +4,6 @@
   "customManagers": [
     {
       "customType": "regex",
-      "datasourceTemplate": "docker",
-      "fileMatch": ["Chart.yaml$"],
-      "matchStrings": [
-        "name:\\s+(?<depName>.+)[\\s\\S]+?appVersion:\\s+\"(?<currentValue>.+)\""
-      ]
-    },
-    {
-      "customType": "regex",
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "norwoodj/helm-docs",
       "extractVersionTemplate": "^v(?<version>.+)$",
