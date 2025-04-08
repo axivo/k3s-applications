@@ -12,7 +12,7 @@ ArgoCD application for `sealed-secrets` [chart](https://github.com/bitnami-labs/
 The application can be deployed from ArgoCD UI, or terminal:
 
 ```shell
-kubectl apply -f apps/sealed-secrets/application.yaml
+$ kubectl apply -f apps/sealed-secrets/application.yaml
 ```
 
 ### Chart Values
@@ -24,31 +24,34 @@ See the chart values, listed below.
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| sealed-secrets.fullnameOverride | string | "" | Fully overrides the controller fullname |
-| sealed-secrets.keyrenewperiod | string | "" | Specifies key renewal period, default `720h0m` |
-| sealed-secrets.metrics.dashboards.annotations | object | {} | Annotations added to Grafana dashboard ConfigMap |
-| sealed-secrets.metrics.dashboards.create | bool | false | Specifies whether a Grafana dashboard ConfigMap is created |
-| sealed-secrets.metrics.dashboards.labels | object | {} | Labels added to Grafana dashboard ConfigMap |
-| sealed-secrets.metrics.dashboards.namespace | string | "" | Namespace where Grafana dashboard ConfigMap is deployed |
-| sealed-secrets.metrics.serviceMonitor.enabled | bool | false | Specifies if a ServiceMonitor is deployed for Prometheus Operator |
+| sealed-secrets.fullnameOverride | string | "sealed-secrets-controller" | Fully overrides the controller fullname |
+| sealed-secrets.keyrenewperiod | string | "" | Specifies key renewal period, e.g., 720h0m (30 days) |
+| sealed-secrets.metrics.dashboards.annotations | map | {} | Annotations added to Grafana dashboard ConfigMap |
+| sealed-secrets.metrics.dashboards.create | bool | true | Specifies whether a Grafana dashboard ConfigMap is created |
+| sealed-secrets.metrics.dashboards.labels | map | {} | Labels added to Grafana dashboard ConfigMap |
+| sealed-secrets.metrics.dashboards.namespace | string | "kube-system" | Namespace where Grafana dashboard ConfigMap is deployed |
+| sealed-secrets.metrics.serviceMonitor.enabled | bool | true | Specifies if a ServiceMonitor is deployed |
 | sealed-secrets.metrics.serviceMonitor.honorLabels | bool | true | Specifies if ServiceMonitor endpoints honor labels |
-| sealed-secrets.metrics.serviceMonitor.interval | string | "" | How frequently to scrape metrics |
-| sealed-secrets.metrics.serviceMonitor.metricRelabelings | list | [] | Specifies additional relabeling of metrics |
-| sealed-secrets.metrics.serviceMonitor.namespace | string | "" | Namespace where Prometheus Operator is running |
-| sealed-secrets.metrics.serviceMonitor.relabelings | list | [] | Specifies general relabeling of metrics |
-| sealed-secrets.metrics.serviceMonitor.scrapeTimeout | string | "" | Timeout after which scrape is ended |
-| sealed-secrets.pdb.create | bool | false | Specifies whether a PodDisruptionBudget is created |
-| sealed-secrets.pdb.maxUnavailable | int | "" | Maximum number of unavailable pods |
-| sealed-secrets.pdb.minAvailable | int | 1 | Minimum number of available pods |
-| sealed-secrets.resources.limits | object | {} | Resources limits for containers |
-| sealed-secrets.resources.requests | object | {} | Resources requests for containers |
+| sealed-secrets.metrics.serviceMonitor.interval | string | "30s" | How frequently to scrape metrics |
+| sealed-secrets.metrics.serviceMonitor.metricRelabelings | list | [] | Specifies additional relabeling rules for metrics |
+| sealed-secrets.metrics.serviceMonitor.namespace | string | "kube-system" | Namespace where Prometheus Operator is running |
+| sealed-secrets.metrics.serviceMonitor.relabelings | list | [] | Specifies general relabeling rules for metrics |
+| sealed-secrets.metrics.serviceMonitor.scrapeTimeout | string | "15s" | Timeout after which scrape is ended |
+| sealed-secrets.pdb.create | bool | true | Specifies whether a PodDisruptionBudget is created |
+| sealed-secrets.pdb.maxUnavailable | int/string | 1 | Maximum number of unavailable pods, mutually exclusive with minAvailable |
+| sealed-secrets.pdb.minAvailable | int/string | "" | Minimum number of available pods, mutually exclusive with maxUnavailable |
+| sealed-secrets.resources.limits | map | `{"memory":"128Mi"}` | Resource limits for the container |
+| sealed-secrets.resources.limits.memory | string | "128Mi" | Memory limit |
+| sealed-secrets.resources.requests | map | `{"cpu":"10m","memory":"128Mi"}` | Resource requests for the container |
+| sealed-secrets.resources.requests.cpu | string | "10m" | CPU request |
+| sealed-secrets.resources.requests.memory | string | "128Mi" | Memory request |
 
 ## Command-Line Interface
 
 To encrypt sensitive information prior storing it into a Git repository, install the CLI tool:
 
 ```shell
-brew install kubeseal
+$ brew install kubeseal
 ```
 
 ### Usage
@@ -56,7 +59,7 @@ brew install kubeseal
 Create a `Secret` resource, locally:
 
 ```shell
-cat > secret.yaml <<EOF
+$ cat > secret.yaml <<EOF
 apiVersion: v1
 kind: Secret
 metadata:
@@ -72,7 +75,7 @@ EOF
 Encrypt the secret with the CLI tool:
 
 ```shell
-kubeseal -o yaml -f secret.yaml -w sealed-secret.yaml
+$ kubeseal -o yaml -f secret.yaml -w sealed-secret.yaml
 ```
 
 ### Sealed Secret
