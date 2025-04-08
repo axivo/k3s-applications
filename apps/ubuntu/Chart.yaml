@@ -1,6 +1,6 @@
 apiVersion: v2
 name: ubuntu
-description: Ubuntu Server-based troubleshooting pod for Kubernetes
+description: Ubuntu Server LTS troubleshooting container for Kubernetes
 version: 1.1.0
 appVersion: "24.04"
 type: application
