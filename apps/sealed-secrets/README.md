@@ -1,8 +1,8 @@
 # sealed-secrets
 
-![AppVersion: 2.5.7](https://img.shields.io/badge/AppVersion-2.5.7-informational?style=flat-square)
+![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)  ![Version: 1.1.0](https://img.shields.io/badge/Version-1.1.0-informational?style=flat-square)  ![AppVersion: 2.17.1](https://img.shields.io/badge/AppVersion-2.17.1-informational?style=flat-square)
 
-ArgoCD application for `sealed-secrets` [chart](https://github.com/bitnami/charts/tree/sealed-secrets/2.5.7/bitnami/sealed-secrets), deployed into AXIVO [K3s cluster](https://github.com/axivo/k3s-cluster). Review the cluster [documentation](https://axivo.com/k3s-cluster/), for additional details. The application deployment is also compatible with a generic Kubernetes cluster.
+ArgoCD application for `sealed-secrets` [chart](https://github.com/bitnami-labs/sealed-secrets/blob/helm-v2.17.1/helm/sealed-secrets), deployed into AXIVO [K3s Cluster](https://github.com/axivo/k3s-cluster). Review the cluster [documentation](https://axivo.com/k3s-cluster/), for additional details. The application deployment is also compatible with a generic Kubernetes cluster.
 
 ## Application Deployment
 
@@ -24,26 +24,24 @@ See the chart values, listed below.
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| sealed-secrets.ingress.annotations."cert-manager.io/cluster-issuer" | string | `"cloudflare-cluster-issuer"` |  |
-| sealed-secrets.ingress.enabled | bool | `false` | See [`bitnami-labs/sealed-secrets#1427`](https://github.com/bitnami-labs/sealed-secrets/issues/1427), for details |
-| sealed-secrets.ingress.hostname | string | `"secrets.noty.cc"` |  |
-| sealed-secrets.ingress.ingressClassName | string | `"cilium"` |  |
-| sealed-secrets.ingress.pathType | string | `"Prefix"` |  |
-| sealed-secrets.ingress.tls | bool | `true` |  |
-| sealed-secrets.metrics.enabled | bool | `true` |  |
-| sealed-secrets.metrics.serviceMonitor.enabled | bool | `true` |  |
-| sealed-secrets.metrics.serviceMonitor.interval | string | `"30s"` |  |
-| sealed-secrets.metrics.serviceMonitor.namespace | string | `"kube-system"` |  |
-| sealed-secrets.metrics.serviceMonitor.scrapeTimeout | string | `"25s"` |  |
-| sealed-secrets.pdb.create | bool | `true` |  |
-| sealed-secrets.pdb.maxUnavailable | int | `1` |  |
-| sealed-secrets.resources.limits.memory | string | `"128Mi"` |  |
-| sealed-secrets.resources.requests.cpu | string | `"10m"` |  |
-| sealed-secrets.resources.requests.memory | string | `"128Mi"` |  |
-| sealed-secrets.serviceMonitor.enabled | bool | `true` |  |
-| sealed-secrets.serviceMonitor.interval | string | `"30s"` |  |
-| sealed-secrets.serviceMonitor.namespace | string | `"kube-system"` |  |
-| sealed-secrets.serviceMonitor.scrapeTimeout | string | `"25s"` |  |
+| sealed-secrets.fullnameOverride | string | "" | Fully overrides the controller fullname |
+| sealed-secrets.keyrenewperiod | string | "" | Specifies key renewal period, default `720h0m` |
+| sealed-secrets.metrics.dashboards.annotations | object | {} | Annotations added to Grafana dashboard ConfigMap |
+| sealed-secrets.metrics.dashboards.create | bool | false | Specifies whether a Grafana dashboard ConfigMap is created |
+| sealed-secrets.metrics.dashboards.labels | object | {} | Labels added to Grafana dashboard ConfigMap |
+| sealed-secrets.metrics.dashboards.namespace | string | "" | Namespace where Grafana dashboard ConfigMap is deployed |
+| sealed-secrets.metrics.serviceMonitor.enabled | bool | false | Specifies if a ServiceMonitor is deployed for Prometheus Operator |
+| sealed-secrets.metrics.serviceMonitor.honorLabels | bool | true | Specifies if ServiceMonitor endpoints honor labels |
+| sealed-secrets.metrics.serviceMonitor.interval | string | "" | How frequently to scrape metrics |
+| sealed-secrets.metrics.serviceMonitor.metricRelabelings | list | [] | Specifies additional relabeling of metrics |
+| sealed-secrets.metrics.serviceMonitor.namespace | string | "" | Namespace where Prometheus Operator is running |
+| sealed-secrets.metrics.serviceMonitor.relabelings | list | [] | Specifies general relabeling of metrics |
+| sealed-secrets.metrics.serviceMonitor.scrapeTimeout | string | "" | Timeout after which scrape is ended |
+| sealed-secrets.pdb.create | bool | false | Specifies whether a PodDisruptionBudget is created |
+| sealed-secrets.pdb.maxUnavailable | int | "" | Maximum number of unavailable pods |
+| sealed-secrets.pdb.minAvailable | int | 1 | Minimum number of available pods |
+| sealed-secrets.resources.limits | object | {} | Resources limits for containers |
+| sealed-secrets.resources.requests | object | {} | Resources requests for containers |
 
 ## Command-Line Interface
 
@@ -74,7 +72,7 @@ EOF
 Encrypt the secret with the CLI tool:
 
 ```shell
-kubeseal --controller-name=sealed-secrets -o yaml -f secret.yaml -w sealed-secret.yaml
+kubeseal -o yaml -f secret.yaml -w sealed-secret.yaml
 ```
 
 ### Sealed Secret
