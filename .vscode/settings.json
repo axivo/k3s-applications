@@ -1,0 +1,59 @@
+{
+  "[go-template]": {
+    "editor.autoIndent": "keep",
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2
+  },
+  "[helm]": {
+    "editor.autoIndent": "keep",
+    "editor.formatOnSave": true,
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2
+  },
+  "[yaml]": {
+    "editor.autoIndent": "keep",
+    "editor.formatOnSave": true,
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2
+  },
+  "editor.formatOnSave": true,
+  "editor.rulers": [120],
+  "files.associations": {
+    "*.gotmpl": "helm",
+    "*.tpl": "helm",
+    "*.yaml": "yaml",
+    "*.yml": "yaml",
+    "**/templates/*.yaml": "helm",
+    "**/templates/*.yml": "helm",
+    "renovate.json5": "jsonc"
+  },
+  "json.schemas": [
+    {
+      "fileMatch": ["renovate.json5"],
+      "url": "https://docs.renovatebot.com/renovate-schema.json"
+    }
+  ],
+  "yaml.customTags": [
+    "!include_dir_named",
+    "!include_dir_list",
+    "!include_dir_merge_list",
+    "!include_dir_merge_named",
+    "!secret"
+  ],
+  "yaml.format.enable": true,
+  "yaml.format.singleQuote": false,
+  "yaml.schemas": {
+    "https://json.schemastore.org/chart.json": "apps/*/Chart.yaml",
+    "https://json.schemastore.org/helmfile.json": "**/helmfile.yaml",
+    "kubernetes": [
+      "kubernetes/*.yaml",
+      "apps/*/templates/*.yaml"
+    ]
+  },
+  "yaml.validate": true
+}
