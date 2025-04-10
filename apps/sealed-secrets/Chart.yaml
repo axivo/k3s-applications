@@ -1,7 +1,7 @@
 apiVersion: v2
 name: sealed-secrets
 description: Kubernetes secrets controller used for secure Git storage
-version: 1.1.1
+version: 1.1.2
 type: application
 kubeVersion: ">=1.16.0-0"
 keywords:
