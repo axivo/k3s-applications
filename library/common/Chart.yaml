@@ -1,7 +1,7 @@
 apiVersion: v2
 name: common
 description: Common library for Helm charts
-version: 1.0.1
+version: 1.0.0
 type: library
 kubeVersion: ">=1.22.0-0"
 keywords:
