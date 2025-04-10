@@ -1,6 +1,6 @@
 # Contributing
 
-First off, thank you for considering contributing to the project, we appreciate your time and effort. This document outlines the ways you can contribute and the processes we follow.
+First off, thank you for considering contributing to the project, we appreciate your time and effort! This document outlines the ways you can contribute and the processes we follow.
 
 ## Code of Conduct
 
