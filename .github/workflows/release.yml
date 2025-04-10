@@ -53,8 +53,9 @@ jobs:
                 await runGit(['checkout', '--orphan', 'gh-pages']);
                 await runGit(['rm', '-rf', '.']);
                 fs.mkdirSync('charts', { recursive: true });
+                fs.writeFileSync('charts/.placeholder', 'This file can be safely deleted once charts are published.');
                 await runGit(['add', 'charts']);
-                await runGit(['commit', '-m', 'Initialize gh-pages branch with charts directory']);
+                await runGit(['commit', '-m', 'chore(github-action): initialize gh-pages branch with charts directory']);
                 await runGit(['push', 'origin', 'gh-pages']);
                 await runGit(['checkout', 'main']);
               }
@@ -70,7 +71,7 @@ jobs:
             const yaml = require('js-yaml');
             try {
               const crConfig = {
-                "charts-repo-url": "https://axivo.github.io/charts",
+                "charts-repo-url": "https://axivo.github.io/k3s-applications/charts",
                 "index-path": "charts/index.yaml"
               };
               fs.writeFileSync('.github/cr-config.yml', yaml.dump(crConfig));
@@ -99,18 +100,22 @@ jobs:
             try {
               await runGit(['fetch', 'origin', 'gh-pages']);
               await runGit(['checkout', 'gh-pages']);
+              const indexPath = 'charts/index.yaml';
+              if (!fs.existsSync(indexPath)) {
+                core.warning(indexPath + ' not found, skipping index.md update.');
+                await runGit(['checkout', 'main']);
+                return;
+              }
               await runGit(['checkout', 'main', '.github/repository.md.gotmpl']);
               const template = fs.readFileSync('.github/repository.md.gotmpl', 'utf8');
               if (!fs.existsSync('charts')) {
                 fs.mkdirSync('charts', { recursive: true });
               }
-              const indexPath = 'charts/index.yaml';
-              if (!fs.existsSync(indexPath)) {
-                throw new Error('charts/index.yaml not found. Chart releaser may have failed.');
-              }
               const index = yaml.load(fs.readFileSync(indexPath, 'utf8'));
               if (!index || !index.entries) {
-                throw new Error('Invalid or empty index.yaml file');
+                core.warning('Invalid or empty index.yaml file, skipping index.md update.');
+                await runGit(['checkout', 'main']);
+                return;
               }
               const chartTable = Object.entries(index.entries)
                 .sort(([a], [b]) => a.localeCompare(b))
@@ -122,23 +127,29 @@ jobs:
                 })
                 .filter(Boolean)
                 .join('\n');
-              const rangePattern = new RegExp(`{{\\s*range\\s*.Charts\\s*}}.*{{\\s*end\\s*}}`, 's');
-              const templateParts = template.split(rangePattern);
-              if (templateParts.length !== 2) {
-                throw new Error('Invalid template format, could not find chart range markers');
-              }
-              const markdown = templateParts[0] + chartTable + templateParts[1];
-              fs.writeFileSync('charts/index.md', markdown);
+              const templatePattern = '{{ range .Charts }}| `{{ .Name }}` | {{ .Version }} | {{ .Description }} |\n{{ end }}';  
+              const templateContent = template.replace(templatePattern, chartTable);
+              fs.writeFileSync('charts/index.md', templateContent);
               await runGit(['add', 'charts/index.md']);
-              await runGit(['commit', '-m', 'Update charts documentation']);
-              await runGit(['push', 'origin', 'gh-pages']);
+              const files = (await runGit(['diff', '--staged', '--name-only'])).split('\n').filter(Boolean);
+              if (files.length > 0) {
+                const placeholderPath = 'charts/.placeholder';
+                if (fs.existsSync(placeholderPath)) {
+                  fs.unlinkSync(placeholderPath);
+                  await runGit(['add', placeholderPath]);
+                }
+                await runGit(['commit', '-m', 'chore(github-action): update chart releases documentation']);
+                await runGit(['push', 'origin', 'gh-pages']);
+              } else {
+                core.info('No changes to index.md detected');
+              }
               await runGit(['checkout', 'main']);
-              core.info('Successfully updated index.md in charts directory, for gh-pages branch');
+              core.info('Successfully processed index.md for gh-pages branch.');
             } catch (error) {
-              core.setFailed(error.message);
+              core.error(error.message);
               try {
                 await runGit(['checkout', 'main']);
-              } catch (error) {
-                core.setFailed(error.message);
+              } catch (checkoutError) {
+                core.error(checkoutError.message);
               }
             }
