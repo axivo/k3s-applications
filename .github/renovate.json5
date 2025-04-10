@@ -30,12 +30,12 @@
       "customType": "regex",
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "helm/helm",
-      "extractVersionTemplate": "^(?<version>.+)$",
+      "extractVersionTemplate": "^v(?<version>.+)$",
       "fileMatch": [
         ".github/workflows/release.yml"
       ],
       "matchStrings": [
-        "uses:\\s+?azure[\\s\\S]+?version:\\s+(?<currentValue>.+)"
+        "uses:\\s+?azure[\\s\\S]+?version:\\s+v(?<currentValue>.+)"
       ]
     }
   ],
