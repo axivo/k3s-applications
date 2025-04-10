@@ -23,7 +23,7 @@ permissions:
 
 jobs:
   update:
-    name: Update Documentation
+    name: Generate and Update Documentation
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
