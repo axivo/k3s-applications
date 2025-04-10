@@ -26,6 +26,8 @@ For detailed documentation about each chart, visit our [GitHub repository](https
 | Chart | Version | Description |
 |-------|---------|-------------|
 | `common` | 1.0.2 | Common library for Helm charts |
+| `sealed-secrets` | 1.1.1 | Kubernetes secrets controller used for secure Git storage |
+| `ubuntu` | 1.1.1 | Ubuntu Server LTS troubleshooting container for Kubernetes |
 
 ### License
 
