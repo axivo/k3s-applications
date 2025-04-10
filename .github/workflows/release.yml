@@ -50,17 +50,18 @@ jobs:
             const fs = require('fs');
             const runGit = async (args) => (await exec.getExecOutput('git', args)).stdout.trim();
             try {
+              const configContent = fs.readFileSync('.github/cr-config.yml', 'utf8');
+              const indexPathLine = configContent.split('\n').find(line => line.trim().startsWith('index-path:'));
+              const indexPath = indexPathLine?.split(':')[1]?.trim() || 'index.yaml';
               const branchExists = (await runGit(['ls-remote', '--heads', 'origin', 'gh-pages'])).length > 0;
               if (!branchExists) {
-                core.info('Creating gh-pages branch with charts directory.');
+                core.info('Creating gh-pages branch.');
                 await runGit(['checkout', '--orphan', 'gh-pages']);
                 await runGit(['rm', '-rf', '.']);
-                fs.mkdirSync('.', { recursive: true });
-                core.info('Creating placeholder file in charts directory.');
                 const placeholderContent = '# AXIVO Helm Charts\n\nThis repository contains Helm charts published by chart-releaser.\n';
                 fs.writeFileSync('README.md', placeholderContent);
                 await runGit(['add', 'README.md']);
-                await runGit(['commit', '-m', 'chore(github-action): initialize gh-pages branch with charts directory']);
+                await runGit(['commit', '-m', 'chore(github-action): initialize gh-pages branch']);
                 await runGit(['push', 'origin', 'gh-pages']);
                 await runGit(['checkout', 'main']);
               }
@@ -76,6 +77,7 @@ jobs:
         with:
           charts_dir: apps
           config: .github/cr-config.yml
+          skip_existing: true
 
       - name: Run chart-releaser for library
         uses: helm/chart-releaser-action@v1
@@ -85,6 +87,7 @@ jobs:
         with:
           charts_dir: library
           config: .github/cr-config.yml
+          skip_existing: true
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -105,7 +108,9 @@ jobs:
             try {
               await runGit(['fetch', 'origin', 'gh-pages']);
               await runGit(['checkout', '-f', 'gh-pages']);
-              const indexPath = 'index.yaml';
+              await runGit(['checkout', 'main', '.github/cr-config.yml']);
+              const crConfig = yaml.load(fs.readFileSync('.github/cr-config.yml', 'utf8'));
+              const indexPath = crConfig['index-path'];
               if (!fs.existsSync(indexPath)) {
                 core.warning(indexPath + ' not found, skipping index.md update.');
                 await runGit(['checkout', 'main']);
@@ -122,18 +127,17 @@ jobs:
               const chartTable = Object.entries(index.entries)
                 .sort(([a], [b]) => a.localeCompare(b))
                 .map(([name, versions]) => {
-                  if (!versions || !versions.length) {
-                    return null;
-                  }
-                  return `| \`${name}\` | ${versions[0].version} | ${versions[0].description || ''} |`;
+                  if (!versions || !versions.length) return null;
+                  return '| `' + name + '` | ' + versions[0].version + ' | ' + (versions[0].description || '') + ' |';
                 })
                 .filter(Boolean)
                 .join('\n');
-              const templatePattern = '{{ range .Charts }}| `{{ .Name }}` | {{ .Version }} | {{ .Description }} |\n{{ end }}';  
+              const templatePattern = '{{ range .Charts }}| `{{ .Name }}` | {{ .Version }} | {{ .Description }} |\n{{ end }}';
               const templateContent = template.replace(templatePattern, chartTable);
-              fs.writeFileSync('index.md', templateContent);
-              await runGit(['add', 'index.md']);
-              const files = (await runGit(['diff', '--staged', '--name-only'])).split('\n').filter(Boolean);
+              const indexMdPath = indexPath.replace('.yaml', '.md');
+              fs.writeFileSync(indexMdPath, templateContent);
+              await runGit(['add', indexMdPath]);
+              const files = (await runGit(['diff', '--staged', '--name-only'])).split('\n').filter(file => file.length > 0);
               if (files.length > 0) {
                 const placeholderPath = '.placeholder';
                 if (fs.existsSync(placeholderPath)) {
