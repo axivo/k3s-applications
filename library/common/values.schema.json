@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CommonLibraryValues",
+  "description": "Values schema for the common library chart.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "global": {
+      "description": "Global settings that can be referenced by charts using this library",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "domain": {
+          "description": "Primary domain used across applications",
+          "type": "string",
+          "default": "noty.cc"
+        },
+        "certManager": {
+          "description": "Certificate manager configuration",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "clusterIssuer": {
+              "description": "Default cert-manager cluster issuer",
+              "type": "string",
+              "default": "cloudflare-cluster-issuer"
+            }
+          }
+        },
+        "externalDns": {
+          "description": "ExternalDNS configurations",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "provider": {
+              "description": "DNS provider for external-dns",
+              "type": "string",
+              "default": "cloudflare"
+            },
+            "acmeServer": {
+              "description": "ACME server environment, `production` or `staging`",
+              "type": "string",
+              "enum": ["production", "staging"],
+              "default": "production"
+            }
+          }
+        }
+      }
+    }
+  }
+}

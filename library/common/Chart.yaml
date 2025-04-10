@@ -1,0 +1,14 @@
+apiVersion: v2
+name: common
+description: Common library for Helm charts
+version: 1.0.0
+type: library
+kubeVersion: ">=1.22.0-0"
+keywords:
+  - common
+  - library
+home: https://github.com/axivo/k3s-applications
+icon: https://raw.githubusercontent.com/axivo/k3s-applications/refs/heads/main/library/common/icon.png
+maintainers:
+  - name: AXIVO
+    url: https://axivo.com

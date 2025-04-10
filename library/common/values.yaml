@@ -1,0 +1,20 @@
+global:
+  # -- (string) Primary domain used across applications
+  # @default -- "noty.cc"
+  domain: noty.cc
+
+  # -- (string) Default cert-manager cluster issuer
+  # @default -- "cloudflare-cluster-issuer"
+  certManager:
+    clusterIssuer: cloudflare-cluster-issuer
+
+  # -- (map) ExternalDNS configurations
+  # @default -- See below
+  externalDns:
+    # -- (string) DNS provider for external-dns
+    # @default -- "cloudflare"
+    provider: cloudflare
+
+    # -- (string) ACME server environment, `production` or `staging`
+    # @default -- "production"
+    acmeServer: production
