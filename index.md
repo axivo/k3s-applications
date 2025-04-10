@@ -25,7 +25,7 @@ For detailed documentation about each chart, visit our [GitHub repository](https
 
 | Chart | Version | Description |
 |-------|---------|-------------|
-| `common` | 1.0.1 | Common library for Helm charts |
+| `common` | 1.0.2 | Common library for Helm charts |
 
 ### License
 
