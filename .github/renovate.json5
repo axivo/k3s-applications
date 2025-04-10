@@ -32,7 +32,7 @@
       "depNameTemplate": "helm/helm",
       "extractVersionTemplate": "^Helm\\s+(?<version>.+)$",
       "fileMatch": [
-        ".github/workflows/charts.yml"
+        ".github/workflows/release.yml"
       ],
       "matchStrings": [
         "uses:\\s+?azure[\\s\\S]+?version:\\s+(?<currentValue>.+)"
