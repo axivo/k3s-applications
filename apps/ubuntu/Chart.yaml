@@ -1,7 +1,7 @@
 apiVersion: v2
 name: ubuntu
 description: Ubuntu Server LTS troubleshooting container for Kubernetes
-version: 1.1.0
+version: 1.1.1
 appVersion: "24.04"
 type: application
 kubeVersion: ">=1.22.0-0"
