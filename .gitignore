@@ -1,2 +1,35 @@
+# Dependencies
+node_modules/
+
+# Environment
+.env
+.env.local
+
+# Helm
 **/charts/
+*.tgz
+.cr-release-packages/
+.cr-index/
+
+# Helm Docs (if generated locally)
+.helm-docs
+
+# Logs
+*.log
+logs/
+
+# Mac OS
 **/.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
+
+# VS Code (keep .vscode settings)
+.history/
