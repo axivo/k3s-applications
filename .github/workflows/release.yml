@@ -8,7 +8,8 @@ on:
       - .github/workflows/release.yml
       - .github/cr-config.yml
       - .github/repository.md.gotmpl
-      - library/common/**
+      - apps/**
+      - library/**
   workflow_dispatch:
 
 jobs:
@@ -67,9 +68,18 @@ jobs:
               core.setFailed(error.message);
             }
 
-      - name: Run chart-releaser
+      - name: Run chart-releaser for apps
         uses: helm/chart-releaser-action@v1
-        id: release
+        id: release-apps
+        env:
+          CR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          charts_dir: apps
+          config: .github/cr-config.yml
+
+      - name: Run chart-releaser for library
+        uses: helm/chart-releaser-action@v1
+        id: release-library
         env:
           CR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
