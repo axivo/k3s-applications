@@ -3,9 +3,12 @@ name: Update Documentation
 on:
   pull_request:
     paths:
-      - 'apps/*/Chart.yaml'
-      - 'apps/*/README.md.gotmpl'
-      - 'apps/*/values.yaml'
+      - "apps/*/Chart.yaml"
+      - "apps/*/README.md.gotmpl"
+      - "apps/*/values.yaml"
+      - "library/*/Chart.yaml"
+      - "library/*/README.md.gotmpl"
+      - "library/*/values.yaml"
 
 concurrency:
   cancel-in-progress: true

@@ -1,0 +1,48 @@
+name: Charts Release
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/charts.yml"
+      - "library/common/**"
+  workflow_dispatch:
+
+jobs:
+  release:
+    name: Charts Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure repository
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const runGit = async (args) => (await exec.getExecOutput('git', args)).stdout.trim();
+            try {
+              await Promise.all([
+                runGit(['config', 'user.name', 'github-actions[bot]']),
+                runGit(['config', 'user.email', '41898282+github-actions[bot]@users.noreply.github.com'])
+              ]);
+            } catch (error) {
+              core.setFailed(error.message);
+            }
+
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.12.0
+
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.6.0
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        with:
+          charts_dir: library
+          config: .github/cr-config.yml
