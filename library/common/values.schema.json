@@ -16,7 +16,7 @@
           "default": "noty.cc"
         },
         "certManager": {
-          "description": "Certificate manager configuration",
+          "description": "Configuration for cert-manager",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -28,7 +28,7 @@
           }
         },
         "externalDns": {
-          "description": "ExternalDNS configurations",
+          "description": "Configuration for ExternalDNS",
           "type": "object",
           "additionalProperties": false,
           "properties": {

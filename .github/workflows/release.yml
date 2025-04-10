@@ -14,7 +14,7 @@ on:
 
 jobs:
   release:
-    name: Charts Release
+    name: Package and Publish Release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
