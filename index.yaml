@@ -2,6 +2,24 @@ apiVersion: v1
 entries:
   common:
   - apiVersion: v2
+    created: "2025-04-10T15:14:30.375302176Z"
+    description: Common library for Helm charts
+    digest: 99c81f6f2de11381a211443bec74b077b7c6ef58959d3717485608707fafcf81
+    home: https://github.com/axivo/k3s-applications
+    icon: https://raw.githubusercontent.com/axivo/k3s-applications/refs/heads/main/library/common/icon.png
+    keywords:
+    - common
+    - library
+    kubeVersion: '>=1.22.0-0'
+    maintainers:
+    - name: AXIVO
+      url: https://axivo.com
+    name: common
+    type: library
+    urls:
+    - https://github.com/axivo/k3s-applications/releases/download/common-1.0.3/common-1.0.3.tgz
+    version: 1.0.3
+  - apiVersion: v2
     created: "2025-04-10T13:54:09.273330573Z"
     description: Common library for Helm charts
     digest: eb8b2da4c50f3ec1c7ba586db4c8b2ba3bdc23e4612d65c0bc226b2f753b28c9
@@ -131,4 +149,4 @@ entries:
     urls:
     - https://github.com/axivo/k3s-applications/releases/download/ubuntu-1.1.1/ubuntu-1.1.1.tgz
     version: 1.1.1
-generated: "2025-04-10T15:14:28.371183321Z"
+generated: "2025-04-10T15:14:30.375326141Z"
