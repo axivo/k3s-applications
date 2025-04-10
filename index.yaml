@@ -39,6 +39,30 @@ entries:
     version: 1.0.1
   sealed-secrets:
   - apiVersion: v2
+    created: "2025-04-10T15:14:28.244939109Z"
+    dependencies:
+    - name: sealed-secrets
+      repository: https://bitnami-labs.github.io/sealed-secrets
+      version: 2.17.2
+    description: Kubernetes secrets controller used for secure Git storage
+    digest: 24e7ee29b5e7efd4ee7363ab3e71e1449704f98114d1dce136ae54d838d92e94
+    home: https://github.com/axivo/k3s-applications
+    icon: https://raw.githubusercontent.com/axivo/k3s-applications/refs/heads/main/apps/sealed-secrets/icon.png
+    keywords:
+    - sealed-secrets
+    - secrets
+    kubeVersion: '>=1.16.0-0'
+    maintainers:
+    - name: AXIVO
+      url: https://axivo.com
+    name: sealed-secrets
+    sources:
+    - https://github.com/bitnami-labs/sealed-secrets
+    type: application
+    urls:
+    - https://github.com/axivo/k3s-applications/releases/download/sealed-secrets-1.1.2/sealed-secrets-1.1.2.tgz
+    version: 1.1.2
+  - apiVersion: v2
     created: "2025-04-10T14:11:24.331640781Z"
     dependencies:
     - name: sealed-secrets
@@ -65,6 +89,28 @@ entries:
   ubuntu:
   - apiVersion: v2
     appVersion: "24.04"
+    created: "2025-04-10T15:14:28.371163113Z"
+    description: Ubuntu Server LTS troubleshooting container for Kubernetes
+    digest: 10cdbd0a971db05bd9fc72cd5a05a711ac4ebccda743a52529c16499d33259bb
+    home: https://github.com/axivo/k3s-applications
+    icon: https://raw.githubusercontent.com/axivo/k3s-applications/refs/heads/main/apps/ubuntu/icon.png
+    keywords:
+    - ubuntu
+    - server
+    - troubleshooting
+    kubeVersion: '>=1.22.0-0'
+    maintainers:
+    - name: AXIVO
+      url: https://axivo.com
+    name: ubuntu
+    sources:
+    - https://ubuntu.com/server
+    type: application
+    urls:
+    - https://github.com/axivo/k3s-applications/releases/download/ubuntu-1.1.2/ubuntu-1.1.2.tgz
+    version: 1.1.2
+  - apiVersion: v2
+    appVersion: "24.04"
     created: "2025-04-10T14:11:24.439052283Z"
     description: Ubuntu Server LTS troubleshooting container for Kubernetes
     digest: 1787ed574ab16f29ebc576e716bd3d9a28e0faef8a34d00a8ae4a280cdbaa95b
@@ -85,4 +131,4 @@ entries:
     urls:
     - https://github.com/axivo/k3s-applications/releases/download/ubuntu-1.1.1/ubuntu-1.1.1.tgz
     version: 1.1.1
-generated: "2025-04-10T14:11:24.43906109Z"
+generated: "2025-04-10T15:14:28.371183321Z"
