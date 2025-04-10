@@ -3,13 +3,11 @@ global:
   # @default -- "noty.cc"
   domain: noty.cc
 
-  # -- (map) Configuration for cert-manager
   certManager:
     # -- (string) Default cert-manager cluster issuer
     # @default -- "cloudflare-cluster-issuer"
     clusterIssuer: cloudflare-cluster-issuer
 
-  # -- (map) Configuration for ExternalDNS
   externalDns:
     # -- (string) DNS provider for external-dns
     # @default -- "cloudflare"
