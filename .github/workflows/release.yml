@@ -6,6 +6,8 @@ on:
       - main
     paths:
       - .github/workflows/release.yml
+      - .github/cr-config.yml
+      - .github/repository.md.gotmpl
       - library/common/**
   workflow_dispatch:
 
@@ -52,11 +54,11 @@ jobs:
                 core.info('Creating gh-pages branch with charts directory.');
                 await runGit(['checkout', '--orphan', 'gh-pages']);
                 await runGit(['rm', '-rf', '.']);
-                fs.mkdirSync('charts', { recursive: true });
+                fs.mkdirSync('.', { recursive: true });
                 core.info('Creating placeholder file in charts directory.');
-                const placeholderContent = '# Helm Charts\n\nThis directory contains Helm charts published by chart-releaser.\n';
-                fs.writeFileSync('charts/README.md', placeholderContent);
-                await runGit(['add', 'charts']);
+                const placeholderContent = '# AXIVO Helm Charts\n\nThis repository contains Helm charts published by chart-releaser.\n';
+                fs.writeFileSync('README.md', placeholderContent);
+                await runGit(['add', 'README.md']);
                 await runGit(['commit', '-m', 'chore(github-action): initialize gh-pages branch with charts directory']);
                 await runGit(['push', 'origin', 'gh-pages']);
                 await runGit(['checkout', 'main']);
@@ -93,7 +95,7 @@ jobs:
             try {
               await runGit(['fetch', 'origin', 'gh-pages']);
               await runGit(['checkout', 'gh-pages']);
-              const indexPath = 'charts/index.yaml';
+              const indexPath = 'index.yaml';
               if (!fs.existsSync(indexPath)) {
                 core.warning(indexPath + ' not found, skipping index.md update.');
                 await runGit(['checkout', 'main']);
@@ -101,9 +103,6 @@ jobs:
               }
               await runGit(['checkout', 'main', '.github/repository.md.gotmpl']);
               const template = fs.readFileSync('.github/repository.md.gotmpl', 'utf8');
-              if (!fs.existsSync('charts')) {
-                fs.mkdirSync('charts', { recursive: true });
-              }
               const index = yaml.load(fs.readFileSync(indexPath, 'utf8'));
               if (!index || !index.entries) {
                 core.warning('Invalid or empty index.yaml file, skipping index.md update.');
@@ -122,11 +121,11 @@ jobs:
                 .join('\n');
               const templatePattern = '{{ range .Charts }}| `{{ .Name }}` | {{ .Version }} | {{ .Description }} |\n{{ end }}';  
               const templateContent = template.replace(templatePattern, chartTable);
-              fs.writeFileSync('charts/index.md', templateContent);
-              await runGit(['add', 'charts/index.md']);
+              fs.writeFileSync('index.md', templateContent);
+              await runGit(['add', 'index.md']);
               const files = (await runGit(['diff', '--staged', '--name-only'])).split('\n').filter(Boolean);
               if (files.length > 0) {
-                const placeholderPath = 'charts/.placeholder';
+                const placeholderPath = '.placeholder';
                 if (fs.existsSync(placeholderPath)) {
                   fs.unlinkSync(placeholderPath);
                   await runGit(['add', placeholderPath]);
