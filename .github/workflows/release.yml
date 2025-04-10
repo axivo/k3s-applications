@@ -9,7 +9,7 @@ on:
       - .github/cr-config.yml
       - .github/repository.md.gotmpl
       - apps/**
-      - library/common/**
+      - library/**
   workflow_dispatch:
 
 jobs:
