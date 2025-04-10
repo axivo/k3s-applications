@@ -23,7 +23,7 @@ permissions:
 
 jobs:
   update:
-    name: Update Documentation
+    name: Generate and Publish
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -67,12 +67,13 @@ jobs:
               await runGit(['fetch', 'origin', process.env.GITHUB_HEAD_REF]);
               await runGit(['switch', process.env.GITHUB_HEAD_REF]);
               await exec.exec('helm-docs');
-              const files = (await runGit(['diff', '--name-only'])).split('\n').filter(Boolean);
+              await runGit(['add', '.']);
+              const files = (await runGit(['diff', '--name-only', '--staged'])).split('\n').filter(Boolean);
               if (files.length === 0) {
                 core.info('No file changes detected');
                 return;
               }
-              const additions = await Promise.all((await runGit(['diff', '--name-only', '--diff-filter=ACMR']))
+              const additions = await Promise.all((await runGit(['diff', '--name-only', '--staged', '--diff-filter=ACMR']))
                 .split('\n')
                 .filter(Boolean)
                 .map(async file => {
@@ -83,7 +84,7 @@ jobs:
                   };
                 })
               );
-              const deletions = (await runGit(['diff', '--name-only', '--diff-filter=D']))
+              const deletions = (await runGit(['diff', '--name-only', '--staged', '--diff-filter=D']))
                 .split('\n')
                 .filter(Boolean)
                 .map(file => ({ path: file }));

@@ -10,8 +10,7 @@ See the chart values, listed below.
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| global.certManager | string | "cloudflare-cluster-issuer" | Default cert-manager cluster issuer |
+| global.certManager.clusterIssuer | string | "cloudflare-cluster-issuer" | Default cert-manager cluster issuer |
 | global.domain | string | "noty.cc" | Primary domain used across applications |
-| global.externalDns | map | See below | ExternalDNS configurations |
 | global.externalDns.acmeServer | string | "production" | ACME server environment, `production` or `staging` |
 | global.externalDns.provider | string | "cloudflare" | DNS provider for external-dns |
