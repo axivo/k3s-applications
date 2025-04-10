@@ -104,7 +104,7 @@ jobs:
             const runGit = async (args) => (await exec.getExecOutput('git', args)).stdout.trim();
             try {
               await runGit(['fetch', 'origin', 'gh-pages']);
-              await runGit(['checkout', 'gh-pages']);
+              await runGit(['checkout', '-f', 'gh-pages']);
               const indexPath = 'index.yaml';
               if (!fs.existsSync(indexPath)) {
                 core.warning(indexPath + ' not found, skipping index.md update.');
