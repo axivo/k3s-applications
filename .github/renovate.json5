@@ -1,11 +1,15 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "assignees": ["fmunteanu"],
+  "assignees": [
+    "fmunteanu"
+  ],
   "customManagers": [
     {
       "customType": "regex",
       "datasourceTemplate": "docker",
-      "fileMatch": ["Chart.yaml$"],
+      "fileMatch": [
+        "Chart.yaml$"
+      ],
       "matchStrings": [
         "name:\\s+(?<depName>.+)[\\s\\S]+?appVersion:\\s+\"(?<currentValue>.+)\""
       ]
@@ -21,14 +25,30 @@
       "matchStrings": [
         "HELM_DOCS_VERSION:\\s+(?<currentValue>.+)"
       ]
+    },
+    {
+      "customType": "regex",
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "helm/helm",
+      "extractVersionTemplate": "^Helm\\s+(?<version>.+)$",
+      "fileMatch": [
+        ".github/workflows/charts.yml"
+      ],
+      "matchStrings": [
+        "uses:\\s+?azure[\\s\\S]+?version:\\s+(?<currentValue>.+)"
+      ]
     }
   ],
   "extends": [
     ":semanticCommitTypeAll(chore)",
     "config:recommended"
   ],
-  "gitIgnoredAuthors": ["41898282+github-actions[bot]@users.noreply.github.com"],
-  "labels": ["dependency"],
+  "gitIgnoredAuthors": [
+    "41898282+github-actions[bot]@users.noreply.github.com"
+  ],
+  "labels": [
+    "dependency"
+  ],
   "prConcurrentLimit": 0,
   "prHourlyLimit": 0,
   "semanticCommits": "enabled",

@@ -11,13 +11,13 @@
         "fullnameOverride": {
           "type": "string",
           "title": "Full Name Override",
-          "description": "(string) Fully overrides the controller fullname",
+          "description": "Fully overrides the controller fullname",
           "default": "sealed-secrets-controller"
         },
         "keyrenewperiod": {
           "type": "string",
           "title": "Key Renewal Period",
-          "description": "(string) Specifies key renewal period, e.g., 720h0m (30 days)",
+          "description": "Specifies key renewal period, e.g., 720h0m (30 days)",
           "default": ""
         },
         "metrics": {
@@ -31,27 +31,27 @@
                 "create": {
                   "type": "boolean",
                   "title": "Create Dashboard ConfigMap",
-                  "description": "(bool) Specifies whether a Grafana dashboard ConfigMap is created",
+                  "description": "Specifies whether a Grafana dashboard ConfigMap is created",
                   "default": true
                 },
                 "labels": {
                   "type": "object",
                   "title": "Dashboard Labels",
-                  "description": "(map) Labels added to Grafana dashboard ConfigMap",
+                  "description": "Labels added to Grafana dashboard ConfigMap",
                   "additionalProperties": true,
                   "default": {}
                 },
                 "annotations": {
                   "type": "object",
                   "title": "Dashboard Annotations",
-                  "description": "(map) Annotations added to Grafana dashboard ConfigMap",
+                  "description": "Annotations added to Grafana dashboard ConfigMap",
                   "additionalProperties": true,
                   "default": {}
                 },
                 "namespace": {
                   "type": "string",
                   "title": "Dashboard Namespace",
-                  "description": "(string) Namespace where Grafana dashboard ConfigMap is deployed",
+                  "description": "Namespace where Grafana dashboard ConfigMap is deployed",
                   "default": "kube-system"
                 }
               }
@@ -63,37 +63,37 @@
                 "enabled": {
                   "type": "boolean",
                   "title": "Enable Service Monitor",
-                  "description": "(bool) Specifies if a ServiceMonitor is deployed",
+                  "description": "Specifies if a ServiceMonitor is deployed",
                   "default": true
                 },
                 "namespace": {
                   "type": "string",
                   "title": "Service Monitor Namespace",
-                  "description": "(string) Namespace where Prometheus Operator is running",
+                  "description": "Namespace where Prometheus Operator is running",
                   "default": "kube-system"
                 },
                 "interval": {
                   "type": "string",
                   "title": "Scrape Interval",
-                  "description": "(string) How frequently to scrape metrics",
+                  "description": "How frequently to scrape metrics",
                   "default": "30s"
                 },
                 "scrapeTimeout": {
                   "type": "string",
                   "title": "Scrape Timeout",
-                  "description": "(string) Timeout after which scrape is ended",
+                  "description": "Timeout after which scrape is ended",
                   "default": "15s"
                 },
                 "honorLabels": {
                   "type": "boolean",
                   "title": "Honor Labels",
-                  "description": "(bool) Specifies if ServiceMonitor endpoints honor labels",
+                  "description": "Specifies if ServiceMonitor endpoints honor labels",
                   "default": true
                 },
                 "relabelings": {
                   "type": "array",
                   "title": "Relabelings",
-                  "description": "(list) Specifies general relabeling rules for metrics",
+                  "description": "Specifies general relabeling rules for metrics",
                   "items": {
                     "type": "object"
                   },
@@ -102,7 +102,7 @@
                 "metricRelabelings": {
                   "type": "array",
                   "title": "Metric Relabelings",
-                  "description": "(list) Specifies additional relabeling rules for metrics",
+                  "description": "Specifies additional relabeling rules for metrics",
                   "items": {
                     "type": "object"
                   },
@@ -119,7 +119,7 @@
             "create": {
               "type": "boolean",
               "title": "Create PDB",
-              "description": "(bool) Specifies whether a PodDisruptionBudget is created",
+              "description": "Specifies whether a PodDisruptionBudget is created",
               "default": true
             },
             "minAvailable": {
@@ -128,7 +128,7 @@
                 { "type": "string" }
               ],
               "title": "Minimum Available Pods",
-              "description": "(int/string) Minimum number of available pods, mutually exclusive with maxUnavailable",
+              "description": "Minimum number of available pods, mutually exclusive with maxUnavailable",
               "default": ""
             },
             "maxUnavailable": {
@@ -137,7 +137,7 @@
                 { "type": "string" }
               ],
               "title": "Maximum Unavailable Pods",
-              "description": "(int/string) Maximum number of unavailable pods, mutually exclusive with minAvailable",
+              "description": "Maximum number of unavailable pods, mutually exclusive with minAvailable",
               "default": 1
             }
           }
@@ -150,12 +150,12 @@
             "limits": {
               "type": "object",
               "title": "Resource Limits",
-              "description": "(map) Resource limits for the container",
+              "description": "Resource limits for the container",
               "properties": {
                 "memory": {
                   "type": "string",
                   "title": "Memory Limit",
-                  "description": "(string) Memory limit",
+                  "description": "Memory limit",
                   "default": "128Mi"
                 }
               }
@@ -163,18 +163,18 @@
             "requests": {
               "type": "object",
               "title": "Resource Requests",
-              "description": "(map) Resource requests for the container",
+              "description": "Resource requests for the container",
               "properties": {
                 "cpu": {
                   "type": "string",
                   "title": "CPU Request",
-                  "description": "(string) CPU request",
+                  "description": "CPU request",
                   "default": "10m"
                 },
                 "memory": {
                   "type": "string",
                   "title": "Memory Request",
-                  "description": "(string) Memory request",
+                  "description": "Memory request",
                   "default": "128Mi"
                 }
               }
