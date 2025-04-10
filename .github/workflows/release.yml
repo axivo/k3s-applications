@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - ".github/workflows/charts.yml"
+      - ".github/workflows/release.yml"
       - "library/common/**"
   workflow_dispatch:
 
@@ -39,10 +39,106 @@ jobs:
         with:
           version: v3.12.0
 
+      - name: Prepare gh-pages branch
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const runGit = async (args) => (await exec.getExecOutput('git', args)).stdout.trim();
+            try {
+              const branchExists = (await runGit(['ls-remote', '--heads', 'origin', 'gh-pages'])).length > 0;
+              if (!branchExists) {
+                core.info('Creating gh-pages branch with charts directory');
+                await runGit(['checkout', '--orphan', 'gh-pages']);
+                await runGit(['rm', '-rf', '.']);
+                fs.mkdirSync('charts', { recursive: true });
+                await runGit(['add', 'charts']);
+                await runGit(['commit', '-m', 'Initialize gh-pages branch with charts directory']);
+                await runGit(['push', 'origin', 'gh-pages']);
+                await runGit(['checkout', 'main']);
+              }
+            } catch (error) {
+              core.setFailed(error.message);
+            }
+
+      - name: Create cr-config.yml for /charts path
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const yaml = require('js-yaml');
+            try {
+              const crConfig = {
+                "charts-repo-url": "https://axivo.github.io/charts",
+                "index-path": "charts/index.yaml"
+              };
+              fs.writeFileSync('.github/cr-config.yml', yaml.dump(crConfig));
+              core.info('Updated cr-config.yml for /charts path');
+            } catch (error) {
+              core.setFailed(error.message);
+            }
+
       - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.6.0
+        uses: helm/chart-releaser-action@v1
+        id: release
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         with:
           charts_dir: library
           config: .github/cr-config.yml
+
+      - name: Update index.md on gh-pages
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const yaml = require('js-yaml');
+            const runGit = async (args) => (await exec.getExecOutput('git', args)).stdout.trim();
+            try {
+              await runGit(['fetch', 'origin', 'gh-pages']);
+              await runGit(['checkout', 'gh-pages']);
+              await runGit(['checkout', 'main', '.github/repository.md.gotmpl']);
+              const template = fs.readFileSync('.github/repository.md.gotmpl', 'utf8');
+              if (!fs.existsSync('charts')) {
+                fs.mkdirSync('charts', { recursive: true });
+              }
+              const indexPath = 'charts/index.yaml';
+              if (!fs.existsSync(indexPath)) {
+                throw new Error('charts/index.yaml not found. Chart releaser may have failed.');
+              }
+              const index = yaml.load(fs.readFileSync(indexPath, 'utf8'));
+              if (!index || !index.entries) {
+                throw new Error('Invalid or empty index.yaml file');
+              }
+              const chartTable = Object.entries(index.entries)
+                .sort(([a], [b]) => a.localeCompare(b))
+                .map(([name, versions]) => {
+                  if (!versions || !versions.length) {
+                    return null;
+                  }
+                  return `| \`${name}\` | ${versions[0].version} | ${versions[0].description || ''} |`;
+                })
+                .filter(Boolean)
+                .join('\n');
+              const rangePattern = new RegExp(`{{\\s*range\\s*.Charts\\s*}}.*{{\\s*end\\s*}}`, 's');
+              const templateParts = template.split(rangePattern);
+              if (templateParts.length !== 2) {
+                throw new Error('Invalid template format, could not find chart range markers');
+              }
+              const markdown = templateParts[0] + chartTable + templateParts[1];
+              fs.writeFileSync('charts/index.md', markdown);
+              await runGit(['add', 'charts/index.md']);
+              await runGit(['commit', '-m', 'Update charts documentation']);
+              await runGit(['push', 'origin', 'gh-pages']);
+              await runGit(['checkout', 'main']);
+              core.info('Successfully updated index.md in charts directory, for gh-pages branch');
+            } catch (error) {
+              core.setFailed(error.message);
+              try {
+                await runGit(['checkout', 'main']);
+              } catch (error) {
+                core.setFailed(error.message);
+              }
+            }
