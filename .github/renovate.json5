@@ -30,7 +30,7 @@
       "customType": "regex",
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "helm/helm",
-      "extractVersionTemplate": "^v(?<version>.+)$",
+      "extractVersionTemplate": "^(?<version>.+)$",
       "fileMatch": [
         ".github/workflows/release.yml"
       ],
