@@ -5,8 +5,8 @@ on:
     branches:
       - main
     paths:
-      - ".github/workflows/release.yml"
-      - "library/common/**"
+      - .github/workflows/release.yml
+      - library/common/**
   workflow_dispatch:
 
 jobs:
@@ -69,13 +69,19 @@ jobs:
         uses: helm/chart-releaser-action@v1
         id: release
         env:
-          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          CR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           charts_dir: library
           config: .github/cr-config.yml
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          cache: npm
+          node-version: 20
+
       - name: Install js-yaml package
-        run: npm install -g js-yaml
+        run: npm install js-yaml
 
       - name: Update index.md on gh-pages
         uses: actions/github-script@v7
@@ -83,7 +89,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const fs = require('fs');
-            const yaml = require('js-yaml');
+            const yaml = require(process.cwd() + '/node_modules/js-yaml');
             const runGit = async (args) => (await exec.getExecOutput('git', args)).stdout.trim();
             try {
               await runGit(['fetch', 'origin', 'gh-pages']);
